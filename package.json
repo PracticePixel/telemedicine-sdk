@@ -1,0 +1,52 @@
+{
+  "name": "react-native-sanar-telemedicine-rc",
+  "version": "0.0.1",
+  "description": "React Native Sanar Telemedicine",
+  "homepage": "https://github.com/MarenTech/react-native-sanar-telemedicine-rc.git",
+  "main": "lib/commonjs/index.js",
+  "scripts": {
+    "prepare": "bob build"
+  },
+  "keywords": [
+    "Sanar",
+    "Telemedicine"
+  ],
+  "author": "Maren",
+  "license": "ISC",
+  "peerDependencies": {
+    "@react-navigation/native": "^5.9.4",
+    "react": "^16.0.0",
+    "react-native": "^0.55",
+    "react-native-agora": "^3.5.0",
+    "react-native-webview": "^7.0.6",
+    "react-native-gesture-handler": "^1.10.3"
+  },
+  "dependencies": {
+    "socket.io-client": "^2.3.0",
+    "react-native-svg-icon": "^0.10.0"
+  },
+  "devDependencies": {
+    "react-native-builder-bob": "^0.18.3"
+  },
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module"
+    ]
+  },
+  "react-native": "src/index.js",
+  "module": "lib/module/index.js",
+  "files": [
+    "src",
+    "lib",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__"
+  ],
+  "eslintIgnore": [
+    "node_modules/",
+    "lib/"
+  ]
+}
