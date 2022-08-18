@@ -2,6 +2,7 @@
 import { info } from 'console';
 import io from 'socket.io-client';
 import { getInfo } from './utils';
+import DeviceInfo from 'react-native-device-info';
 
 type UserInfoType = {
     connectUrl: string,
@@ -25,7 +26,7 @@ class SanarTelemedicine implements SanarTelemedicineInterface {
 
     async Connect(cid: string, info: any) {
         try {
-            let did = info.mid;
+            let did = await DeviceInfo.getUniqueId();
             const { status, data, error_message } = await getInfo(cid, info);
             console.log('data from sanar : ', data, status, error_message);
             if (status == 1000) {
