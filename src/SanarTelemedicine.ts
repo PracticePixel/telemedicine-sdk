@@ -1,4 +1,5 @@
 // @ts-ignore
+import { info } from 'console';
 import io from 'socket.io-client';
 import { getInfo } from './utils';
 
@@ -17,25 +18,22 @@ export interface SanarTelemedicineInterface {
 }
 
 class SanarTelemedicine implements SanarTelemedicineInterface {
-    
+
     public eventListner: any;
     public session: any;
     public info: any;
-    
-    async Connect ( cid : string , info: any) {
+
+    async Connect(cid: string, info: any) {
         try {
-            let uid = info.uid;
-            let did = info.did;
-            delete info.uid;
-            delete info.did;
+            let did = info.mid;
             const { status, data, error_message } = await getInfo(cid, info);
-            console.log('data from sanar : ',data);
-            if(status==1000) {
+            console.log('data from sanar : ', data, status, error_message);
+            if (status == 1000) {
                 this.eventListner = io(data.messagingUrl, { query: `uid=${data.uid}&did=${did}` });
                 this.session = data;
                 this.info = info;
                 return true;
-            } else { 
+            } else {
                 console.log("Error : ", error_message);
                 return false;
             };
@@ -44,8 +42,11 @@ class SanarTelemedicine implements SanarTelemedicineInterface {
         }
     };
 
-    Disconnect () {
-        this.eventListner.disconnect();
+    Disconnect() {
+        if (this.eventListner) {
+            this.eventListner.disconnect();
+            console.log("Socket Disconnected");
+        }
     };
 
 };

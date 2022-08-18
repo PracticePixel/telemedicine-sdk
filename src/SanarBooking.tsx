@@ -21,7 +21,11 @@ const SanarBooking = ( props: ITelemedicine ) => {
     })
     const onMessage = event => {
         console.log(event);
-        if ((!event.canGoBack && event.url==event.data) || (event.data && event.data.includes('home'))) {
+        // if ((!event.canGoBack && event.url==event.data) || (event.data && event.data.includes('home'))) {
+        //     setBaseUrl('');
+        //     props.onEndFlow();
+        // }
+        if ((!event.canGoBack && event.data && event.data.includes('home') )|| (event.canGoBack && event.data && event.data.includes('home'))) {
             setBaseUrl('');
             props.onEndFlow();
         }
@@ -37,7 +41,7 @@ const SanarBooking = ( props: ITelemedicine ) => {
                         uri: baseUrl,
                     }}
                     style={styles.container} 
-                    // incognito
+                    incognito
                     onMessage={(event) => onMessage(event.nativeEvent)}
                     injectedJavaScript={`
                         (function() {

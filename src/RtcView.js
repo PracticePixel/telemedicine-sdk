@@ -78,7 +78,7 @@ export default class RtcView extends Component {
     }
 
     render() {
-        const { intialFrame, isChatEnabled } = this.context
+        const { intialFrame, isChatEnabled, notification } = this.context
         const { joined, connecting } = this.state
         if (joined) {
             return (
@@ -95,8 +95,9 @@ export default class RtcView extends Component {
                     <SanarChat
                         empId={'uid'}
                         appointmentId={'apnt_id'}
+                        notification={notification}
                         enable={isChatEnabled}
-                        onEndFlow={() => navigation.goBack()}
+                        onEndFlow={() => {}}
                     />
                 </View>
             );

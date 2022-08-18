@@ -10,26 +10,30 @@ interface ISanarAppointments {
     enable: boolean
 }
 
-const SanarAppointments = ( props: ISanarAppointments ) => {
+const SanarAppointments = (props: ISanarAppointments) => {
     const [baseUrl, setBaseUrl] = useState('');
     useEffect(() => {
-        if(props.enable) {
-            if(SanarTelemedicine.session) {
-                setBaseUrl(SanarTelemedicine.session.webUrl);
+        if (props.enable) {
+            if (SanarTelemedicine.session) {
+                setBaseUrl(SanarTelemedicine.session.appointmentUrl);
             }
         }
-    },[]);
-    
+    }, []);
+
     const onMessage = event => {
         console.log(event);
-        if ((!event.canGoBack && event.url==event.data) || (event.data && event.data.includes('home'))) {
+        if ((!event.canGoBack && event.data && event.data.includes('home') )|| (event.canGoBack && event.data && event.data.includes('home'))) {
             setBaseUrl('');
             props.onEndFlow();
         }
+        // if ((!event.canGoBack && event.url == event.data) || (event.data && event.data.includes('home'))) {
+        //     setBaseUrl('');
+        //     props.onEndFlow();
+        // }
     }
 
-    if(!props.enable) {
-        return(null);
+    if (!props.enable) {
+        return (null);
     }
 
     return (
@@ -39,7 +43,7 @@ const SanarAppointments = ( props: ISanarAppointments ) => {
                     source={{
                         uri: baseUrl,
                     }}
-                    style={styles.container} 
+                    style={styles.container}
                     startInLoadingState
                     javaScriptEnabled={true}
                     // incognito
@@ -62,7 +66,7 @@ const SanarAppointments = ( props: ISanarAppointments ) => {
                         })();
                         true;
                     `}
-                    />
+                />
             </View>
         </Container>
     );

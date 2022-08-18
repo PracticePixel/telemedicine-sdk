@@ -7,30 +7,31 @@ import SanarTelemedicine from './SanarTelemedicine';
 interface ITelemedicine {
     onEndFlow: () => void,
     enable: boolean,
+    notification: any
     appointmentId,
     empId
 }
 
-const SanarChat = ( props: ITelemedicine ) => {
+const SanarChat = (props: ITelemedicine) => {
     const [baseUrl, setBaseUrl] = useState('');
+    const { notification } = props;
     useEffect(() => {
-        if(props.enable) {
-            if(SanarTelemedicine.session) {
-                setBaseUrl(`https://sanarweb.litedev.com/chat/${props.appointmentId}/${props.empId}?token=${SanarTelemedicine.session.token}`);
+        if (props.enable) {
+            if (SanarTelemedicine.session) {
+                setBaseUrl(`${SanarTelemedicine.session.chatUrl}/${notification.roomName}/${notification.uid}?token=${SanarTelemedicine.session.token}`);
             }
         }
     })
     const onMessage = event => {
-        console.log(event);
         console.log(baseUrl);
-        
-        if(event.url == baseUrl) {
-            // setBaseUrl('');
-            // props.onEndFlow();
+        if ((!event.canGoBack && event.data && event.data.includes('home')) || (event.canGoBack && event.data && event.data.includes('home'))) {
+            setBaseUrl('');
+            props.onEndFlow();
         }
     }
-    if(!props.enable) {
-        return(null);
+    
+    if (!props.enable) {
+        return (null);
     }
     return (
         <Container>
@@ -39,7 +40,7 @@ const SanarChat = ( props: ITelemedicine ) => {
                     source={{
                         uri: baseUrl,
                     }}
-                    style={styles.container} 
+                    style={styles.container}
                     // incognito
                     onMessage={(event) => onMessage(event.nativeEvent)}
                     injectedJavaScript={`
@@ -60,7 +61,7 @@ const SanarChat = ( props: ITelemedicine ) => {
                         })();
                         true;
                     `}
-                    />
+                />
             </View>
         </Container>
     );

@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "socket.io-client": "^2.3.0",
+    "moment": "^2.29.4",
     "react-native-svg-icon": "^0.10.0"
   },
   "devDependencies": {

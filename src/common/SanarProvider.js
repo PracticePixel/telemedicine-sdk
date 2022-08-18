@@ -50,9 +50,9 @@ const SanarProvider = ({ children, enable }) => {
                     dispatch({ type: TELECALL, value: true });
                 });
 
-                SanarTelemedicine.eventListner.on(SANAR_EVENT_TYPE.Message, (e) => {
-                    dispatch({ type: MESSAGE, value: e });
-                });
+                // SanarTelemedicine.eventListner.on(SANAR_EVENT_TYPE.Message, (e) => {
+                //     dispatch({ type: MESSAGE, value: e });
+                // });
 
                 SanarTelemedicine.eventListner.on(SANAR_EVENT_TYPE.ConnectError, () => {
                     console.log('Connect error');
@@ -67,6 +67,9 @@ const SanarProvider = ({ children, enable }) => {
                 });
             }
         } else {
+            dispatch({ type: "" });
+            store.resetStore()
+            SanarTelemedicine.Disconnect();
             console.log(`Connection validation warning`);
         }
     }, [enable]);
