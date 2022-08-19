@@ -98,7 +98,7 @@ const AnimatedImage = (props) => {
                                 thumbnailSource={DefaultUserImg}
                                 source={docImage}
                                 style={styles.proPic}
-                                resizeMode={'stretch'}
+                                resizeMode={'cover'}
                             />
                         </View>
                     </Animated.View>

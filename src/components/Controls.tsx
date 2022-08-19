@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { View, Text, Dimensions, StyleSheet, TouchableOpacity, Platform, Animated, Image, AppState } from 'react-native'
 import SvgIcon from 'react-native-svg-icon'
 import svgs from '../common/SanarSVG';
@@ -16,7 +16,7 @@ const width = Dimensions.get('window').width;
 const height = Dimensions.get('window').height;
 let modelHeight = new Animated.Value(0);
 var backgroundTime = null;
-
+var callDuration = moment().hour(0).minute(0).second(0).format('H : mm : ss');
 interface IControls {
     newMessage: boolean,
     toggleFrame?: () => void,
@@ -26,9 +26,6 @@ const Controls = (props: IControls) => {
     const { toggleFrame } = props;
     const { notification, newMessage, endCall, brandLogo, intialFrame, isPaused, switchFrame, onClickControl, onClickChat } = useContext(SanarContext);
     const { docProfile, docName } = notification;
-
-    const [duration, setDuration] = useState(moment().hour(0).minute(0).second(0).format('H : mm : ss'));
-    const [timer, setTimer] = useState(0);
     const [isModelOpen, setIsModelOpen] = useState(false);
     const [isAudio, setIsAudio] = useState(false);
     const [isCamera, setIsCamera] = useState(false);
@@ -36,37 +33,6 @@ const Controls = (props: IControls) => {
     const [isBlur, setIsBlur] = useState(false);
     const [isMute, setIsMute] = useState(false);
     const [isVideo, setIsVideo] = useState(false);
-
-    useEffect(() => {
-        const subscription = AppState.addEventListener("change", nextAppState => {
-            if (nextAppState == 'background') {
-                backgroundTime = moment()
-            } else {
-                var activeTime = moment()
-                var newData = activeTime.diff(backgroundTime, 'seconds')
-                if (backgroundTime !== null) {
-                    getTime(newData)
-                    backgroundTime = null
-                }
-            }
-        });
-        return () => {
-            subscription.remove();
-        };
-    }, []);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            getTime(1)
-        }, 1000);
-        return () => clearInterval(interval);
-    }, [timer]);
-
-    const getTime = (val) => {
-        setTimer((prev) => prev + val)
-        var callDuration = moment().hour(0).minute(0).second(timer).format('H : mm : ss')
-        setDuration(callDuration)
-    }
 
     const updateModel = () => {
         setIsModelOpen(!isModelOpen)
@@ -228,15 +194,14 @@ const Controls = (props: IControls) => {
             {isPaused && <View style={styles.pauseTextStyle}>
                 <Text style={styles.pausedText} >{'Video Paused'}</Text>
             </View>}
-            <View style={{ position: "absolute", bottom: 120, left: 20 }}>
-                <View style={{ position: "absolute", width: "120%", height: "120%", backgroundColor: "white", opacity: 0.1, marginTop: '-5%', marginLeft: '-7%', borderRadius: 10 }} />
+            <View style={styles.timerBox} >
                 <Text style={{ color: 'black', fontWeight: '700', fontSize: 16 }}>{docName}</Text>
-                <Text style={styles.durationTxt}>{duration}</Text>
+                <Timer setDuration={(duration) => callDuration = duration} />
             </View>
-            <TouchableOpacity onPress={() => endCall(duration)} style={[styles.disconnectBtn]}>
-                <Icon name={"callDisconnectSv"} height={25} width={25} />
-            </TouchableOpacity>
             <View style={styles.backGroundSvg}>
+                <TouchableOpacity onPress={() => endCall(callDuration)} style={[styles.disconnectBtn]}>
+                    <Icon name={"callDisconnectSv"} height={25} width={25} />
+                </TouchableOpacity>
                 <BackGroundSvg color={colors.primaryColor} />
             </View>
             {sideMenuControls()}
@@ -259,42 +224,41 @@ const BackGroundSvg = (color) => {
     )
 }
 
-// const Timer = () => {
-// const [duration, setDuration] = useState(moment().hour(0).minute(0).second(0).format('H : mm : ss'));
-// const [timer, setTimer] = useState(0);
+const Timer = (props) => {
+    const [duration, setDuration] = useState(moment().hour(0).minute(0).second(0).format('H : mm : ss'));
+    useEffect(() => {
+        const subscription = AppState.addEventListener("change", nextAppState => {
+            if (nextAppState == 'background') {
+                backgroundTime = moment()
+            } else {
+                var activeTime = moment()
+                var newData = activeTime.diff(backgroundTime, 'seconds')
+                if (backgroundTime !== null) {
+                    getTime(newData)
+                    backgroundTime = null
+                }
+            }
+        });
+        return () => {
+            subscription.remove();
+        };
+    }, []);
 
-// React.useEffect(() => {
-//     const subscription = AppState.addEventListener("change", nextAppState => {
-//         if (nextAppState == 'background') {
-//             backgroundTime = moment()
-//         } else {
-//             var activeTime = moment()
-//             var newData = activeTime.diff(backgroundTime, 'seconds')
-//             if (backgroundTime !== null) {
-//                 getTime(newData)
-//                 backgroundTime = null
-//             }
-//         }
-//     });
-//     return () => {
-//         subscription.remove();
-//     };
-// }, []);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            getTime(1)
+        }, 1000);
+        return () => { clearInterval(interval) };
+    }, []);
 
-// React.useEffect(() => {
-//     const interval = setInterval(() => {
-//         getTime(1)
-//     }, 1000);
-//     return () => clearInterval(interval);
-// }, [timer]);
-
-// const getTime = (val) => {
-//     setTimer((prev) => prev + val)
-//     var callDuration = moment().hour(0).minute(0).second(timer).format('H : mm : ss')
-//     setDuration(callDuration)
-// }
-// return (<Text style={styles.durationTxt}>{duration}</Text>)
-// }
+    const getTime = (val) => {
+        Call_Timer = Call_Timer + val;
+        var callDuration = moment().hour(0).minute(0).second(Call_Timer).format('H : mm : ss')
+        setDuration(callDuration)
+        props.setDuration(callDuration)
+    }
+    return (<Text style={styles.durationTxt}>{duration}</Text>)
+}
 
 export default Controls;
 
@@ -304,6 +268,8 @@ export const styles = StyleSheet.create({
         justifyContent: 'center',
         width: width,
         height: height,
+        backgroundColor: 'transparent'
+
     },
     btnContainer: {
         position: 'absolute',
@@ -362,7 +328,6 @@ export const styles = StyleSheet.create({
     backGroundSvg: {
         position: 'absolute',
         bottom: 0,
-        zIndex: -9990,
         backgroundColor: 'transparent'
     },
     logoContainer: {
@@ -371,6 +336,18 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         top: Platform.OS === 'ios' ? 30 : -20,
         left: 20,
+    },
+    timerBox: {
+        flex: 1,
+        width: 120,
+        zIndex: 999,
+        bottom: 110,
+        marginLeft: 5,
+        position: 'absolute',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 10
     },
     disconnectBtn: {
         backgroundColor: 'red',
@@ -454,5 +431,4 @@ export const styles = StyleSheet.create({
         fontSize: 13
     }
 })
-
 

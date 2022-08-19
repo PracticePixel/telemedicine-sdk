@@ -16,23 +16,27 @@ Component to connect with Sanar Server
 
 Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
-Connect | func | yes | - | Accepts cid & user details and generate user info to utilise Sanar telemedicine features
+Connect | callback | yes | - | Accepts client_id & user details and generate user info to utilise Sanar telemedicine features
 
 
-#### Connect 
+#### Connect()
+Connect method properties are listed below 
 Parameters
 
-- cid: string
-- info : [UserInfo](/doc#userinfo)
+Property | Type | Required | Default value | Description
+:--- | :--- | :--- | :--- | :---
+cid | string | yes | - | Client Id provided by Sanar
+info | [UserInfo](https://github.com/PracticePixel/sanar-telemedicine-sdk/tree/master/doc#userinfo-) | yes | - | User properties to create session with Sanar
+lang | string | no | `en` | Language of the application
 
-### SanarRTC: 
+### SanarRTC : 
 Sanar videocall frames to initiate videocall
 
 Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
 enable | boolean | true | - | Enable / Disable RTC connection
 
-### SanarBooking:
+### SanarBooking :
 Telemedicine appointment booking flow
 Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
@@ -40,24 +44,27 @@ enable | boolean | false | - | To enable / disable telemedicine booking flow
 onEndFlow | callback | true | - | To handle enable property on booking finish
 
 
-### SanarChat:
-Telemedicine appointment booking flow
+### SanarAppointments :
+Telemedicine appointment list flow
 Property | Type | Required | Default value | Description
 :--- | :--- | :--- | :--- | :---
 enable | boolean | false | - | To enable / disable telemedicine booking flow
-onChatEnd | callback | true | - | To handle chat end event
+onEndFlow | callback | true | - | To handle enable property on booking finish
 
 
 ### UserInfo :
-- did : string 
-- uid : string 
-- first_name : string
-- last_name : string 
-- dob : string 
-- gender : string 
-- nationality : string
-- phone_code : string 
-- phone_no : string
-- marital_status : string
+Property | Description
+:--- | :---
+first_name : string | User first name
+last_name : string  | User last name
+dob : string  | dob in `yyyy-mm-dd`
+gender : string  | Gender `M` | `F`
+nationality : string | Nationality of User ex : Saudi Arabia.
+document_id : string | Document id
+mid : string | Medgulf id 
+document_type: number | Document Type
+phone_code : string  | Phone code ex : `966`
+phone_no : string | Phone Number
+marital_status : string | Marital status `0` : `Unmarried`, `1` : `Married`
 
 

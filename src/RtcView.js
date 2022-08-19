@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { View } from 'react-native'
 import RtcContainer from './components/RtcContainer';
-import RtcEngine from 'react-native-agora';
+import RtcEngine from 'sanar-rtc';
 import VideoFrames from './components/VideoFrames';
 import SanarContext from './common/SanarContext';
 import Connecting from "./components/Connecting";
 import SanarChat from './SanarChat';
-
 export default class RtcView extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +14,7 @@ export default class RtcView extends Component {
             joined: false,
             connecting: true
         }
+        global.Call_Timer = 0;
     }
 
     static contextType = SanarContext
@@ -82,8 +82,18 @@ export default class RtcView extends Component {
         const { joined, connecting } = this.state
         if (joined) {
             return (
-                <View style={{ width: '100%', height: '100%' }}>
-                    <View style={{ position: 'absolute', zIndex: 99999 }}>
+                <>
+                    <View style={{ flex: 1 }}>
+                        {isChatEnabled &&
+                            <SanarChat
+                                empId={'uid'}
+                                appointmentId={'apnt_id'}
+                                notification={notification}
+                                enable={isChatEnabled}
+                                onEndFlow={() => { }}
+                            />}
+                    </View>
+                    <View style={{ position: 'absolute' }}>
                         {connecting ?
                             <Connecting />
                             :
@@ -92,14 +102,7 @@ export default class RtcView extends Component {
                             </RtcContainer>
                         }
                     </View>
-                    <SanarChat
-                        empId={'uid'}
-                        appointmentId={'apnt_id'}
-                        notification={notification}
-                        enable={isChatEnabled}
-                        onEndFlow={() => {}}
-                    />
-                </View>
+                </>
             );
         } else {
             return null;

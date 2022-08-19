@@ -78,7 +78,7 @@ export default class DotLoader extends Component {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        height: 50
+        height: 60,
     }
 });
 

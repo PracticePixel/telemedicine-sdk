@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useReducer, useContext } from "react";
 import { SANAR_EVENT_TYPE, CONNECTION_STATUS } from "../Types";
 import { TELECALL, MESSAGE, ACCEPT_CALL, END_CALL, REJECT_CALL } from "../common/constants";
-import { VirtualBackgroundSourceType, VirtualBackgroundSource, Color, VirtualBackgroundBlurDegree } from 'react-native-agora';
+import { VirtualBackgroundSourceType, VirtualBackgroundSource, Color, VirtualBackgroundBlurDegree } from 'sanar-rtc';
 import SanarTelemedicine from "../SanarTelemedicine";
 
 import SanarContext from './SanarContext';

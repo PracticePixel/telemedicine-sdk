@@ -4,13 +4,12 @@ import WebView from 'react-native-webview';
 import Container from './components/Container';
 import SanarTelemedicine from './SanarTelemedicine';
 
-interface ITelemedicine {
-    // url: string,
+interface ISanarBooking {
     onEndFlow: () => void,
     enable: boolean
 }
 
-const SanarBooking = ( props: ITelemedicine ) => {
+const SanarBooking = ( props: ISanarBooking ) => {
     const [baseUrl, setBaseUrl] = useState('');
     useEffect(() => {
         if(props.enable) {
@@ -21,10 +20,6 @@ const SanarBooking = ( props: ITelemedicine ) => {
     })
     const onMessage = event => {
         console.log(event);
-        // if ((!event.canGoBack && event.url==event.data) || (event.data && event.data.includes('home'))) {
-        //     setBaseUrl('');
-        //     props.onEndFlow();
-        // }
         if ((!event.canGoBack && event.data && event.data.includes('home') )|| (event.canGoBack && event.data && event.data.includes('home'))) {
             setBaseUrl('');
             props.onEndFlow();

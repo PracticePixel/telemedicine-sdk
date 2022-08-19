@@ -5,7 +5,6 @@ import Container from './components/Container';
 import SanarTelemedicine from './SanarTelemedicine';
 
 interface ISanarAppointments {
-    // url: string,
     onEndFlow: () => void,
     enable: boolean
 }
@@ -26,10 +25,6 @@ const SanarAppointments = (props: ISanarAppointments) => {
             setBaseUrl('');
             props.onEndFlow();
         }
-        // if ((!event.canGoBack && event.url == event.data) || (event.data && event.data.includes('home'))) {
-        //     setBaseUrl('');
-        //     props.onEndFlow();
-        // }
     }
 
     if (!props.enable) {

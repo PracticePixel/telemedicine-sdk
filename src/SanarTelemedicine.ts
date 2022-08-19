@@ -1,20 +1,14 @@
 // @ts-ignore
-import { info } from 'console';
 import io from 'socket.io-client';
 import { getInfo } from './utils';
 import DeviceInfo from 'react-native-device-info';
 
-type UserInfoType = {
-    connectUrl: string,
-    bookingUrl: string,
-    sanarToken: string
+export type ConnectResponse = {
+    message: string,
+    status: boolean
 }
-
 export interface SanarTelemedicineInterface {
-    Connect(
-        cid: string,
-        info: any
-    ): Promise<boolean>,
+    Connect( cid: string, info: any, lang?: string ): Promise<ConnectResponse>,
     Disconnect(): void,
 }
 
@@ -24,19 +18,17 @@ class SanarTelemedicine implements SanarTelemedicineInterface {
     public session: any;
     public info: any;
 
-    async Connect(cid: string, info: any) {
+    async Connect(cid: string, info: any, lang?: string) {
         try {
             let did = await DeviceInfo.getUniqueId();
-            const { status, data, error_message } = await getInfo(cid, info);
-            console.log('data from sanar : ', data, status, error_message);
+            const { status, data, message, error_message } = await getInfo(cid, info, lang);
             if (status == 1000) {
                 this.eventListner = io(data.messagingUrl, { query: `uid=${data.uid}&did=${did}` });
                 this.session = data;
                 this.info = info;
-                return true;
+                return { message: message, status: true };
             } else {
-                console.log("Error : ", error_message);
-                return false;
+                return { message: error_message, status: false };
             };
         } catch (error) {
             throw error;
@@ -46,10 +38,9 @@ class SanarTelemedicine implements SanarTelemedicineInterface {
     Disconnect() {
         if (this.eventListner) {
             this.eventListner.disconnect();
-            console.log("Socket Disconnected");
+            console.log("Disconnected with Sanar");
         }
     };
-
 };
 
 export default new SanarTelemedicine();

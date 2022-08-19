@@ -3,8 +3,6 @@ import { Dimensions, TouchableOpacity, PanResponder, Animated, StyleSheet, I18nM
 import Controls from './Controls';
 const { width, height } = Dimensions.get('window');
 
-var durationCount = 0;
-
 const RtcContainer = (props) => {
     const pan = React.useRef(new Animated.ValueXY()).current;
     const [maximizeFrame, setMaximizeFrame] = React.useState(true);
@@ -108,11 +106,10 @@ const RtcContainer = (props) => {
                 {...panResponder.panHandlers} >
                 <TouchableOpacity
                     style={[styles.container, { height: '100%', width: '100%' }, styles.thumbnailClick]}
-                    onPress={toggleFrame}>
+                    onPress={() => { !maximizeFrame && toggleFrame() }}>
                     {props.children}
                 </TouchableOpacity>
             </Animated.View>
-
             {(maximizeFrame) &&
                 <Controls toggleFrame={toggleFrame} />
             }
@@ -146,22 +143,5 @@ const styles = StyleSheet.create({
     thumbnailClick: {
         flex: 1,
         zIndex: 99999
-    },
-    // controls
-    buttonHolder: {
-        height: 100,
-        alignItems: 'center',
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly',
-    },
-    button: {
-        paddingHorizontal: 20,
-        paddingVertical: 10,
-        backgroundColor: '#0093E9',
-        borderRadius: 25,
-    },
-    buttonText: {
-        // color: '#fff',
     },
 });

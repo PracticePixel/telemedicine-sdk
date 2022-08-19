@@ -13,10 +13,8 @@ const Connecting = (props) => {
         <View style={styles.container}>
             <AnimatedImage profileImage={docProfile} />
             <View style={[styles.textContainer]}>
-                <Text style={styles.txtStyle}>
-                    Connecting
-                    <DotLoader numberOfDots={3} style={styles.dots} />
-                </Text>
+                <Text style={styles.txtStyle}>Connecting</Text>
+                <DotLoader numberOfDots={3} style={styles.dots} />
             </View>
         </View>
     );
@@ -33,16 +31,18 @@ const styles = StyleSheet.create({
     textContainer: {
         marginTop: 80,
         width: width,
-        alignItems: 'center',
+        alignItems: 'flex-end',
         justifyContent: 'center',
+        flexDirection: 'row',
     },
     txtStyle: {
+        top: -5,
         fontWeight: '700',
-        fontSize: 25,
+        fontSize: 22,
         color: colors.primaryColor
     },
     dots: {
-        color: colors.primaryColor,
+        color: colors.secondryDarkColor,
         fontSize: 50
     }
 });

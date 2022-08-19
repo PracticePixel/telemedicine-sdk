@@ -9,7 +9,7 @@ import DeviceInfo from 'react-native-device-info';
  */
 //original response = `https://sdk.telemedicine.com?cid=${token}`;
 
-export async function getInfo(cid, data = {}) {
+export async function getInfo(cid, data = {}, lang) {
   const BUNDLE_ID = await DeviceInfo.getBundleId()
   const response = await fetch(`https://api.litedev.com/v1/member`, {
     method: 'POST', // *GET, POST, PUT, DELETE, etc.
@@ -17,7 +17,8 @@ export async function getInfo(cid, data = {}) {
       'Content-Type': 'application/json',
       'Authorization': cid,
       'sales-channel': 'ios',
-      'bundle-id': BUNDLE_ID
+      'bundle-id': BUNDLE_ID,
+      'Accept-Language': lang || 'en'
     },
     body: JSON.stringify(data)
   });

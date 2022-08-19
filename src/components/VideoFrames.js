@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { RtcLocalView, RtcRemoteView, VideoRenderMode } from 'react-native-agora';
+import { RtcLocalView, RtcRemoteView, VideoRenderMode } from 'sanar-rtc';
 import SanarContext from '../common/SanarContext'
 
 interface IVideoFrames {
@@ -13,10 +13,10 @@ const VideoFrames = (props: IVideoFrames) => {
     const LocalFrame = () => {
         return (
             <RtcLocalView.SurfaceView
-                style={{ flex: 1 }}
+                style={{ flex: 1, width: '100%', height: '100%' }}
                 zOrderOnTop={false}
                 channelId={notification.roomName}
-                renderMode={VideoRenderMode.Adaptive}
+                renderMode={VideoRenderMode.Hidden}
             />
         );
     }
@@ -27,10 +27,10 @@ const VideoFrames = (props: IVideoFrames) => {
                 return (
                     <RtcRemoteView.SurfaceView
                         key={i}
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, width: '100%', height: 600 }}
                         uid={peerId}
                         channelId={notification.roomName}
-                        renderMode={VideoRenderMode.Adaptive}
+                        renderMode={VideoRenderMode.Hidden}
                         zOrderMediaOverlay={false}
                     />
                 )

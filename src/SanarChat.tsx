@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import WebView from 'react-native-webview';
-import Container from './components/Container';
 import SanarTelemedicine from './SanarTelemedicine';
-
-interface ITelemedicine {
+const { width, height } = Dimensions.get('window');
+interface ISanarChat {
     onEndFlow: () => void,
     enable: boolean,
     notification: any
@@ -12,13 +11,14 @@ interface ITelemedicine {
     empId
 }
 
-const SanarChat = (props: ITelemedicine) => {
+const SanarChat = (props: ISanarChat) => {
     const [baseUrl, setBaseUrl] = useState('');
     const { notification } = props;
     useEffect(() => {
         if (props.enable) {
             if (SanarTelemedicine.session) {
-                setBaseUrl(`${SanarTelemedicine.session.chatUrl}/${notification.roomName}/${notification.uid}?token=${SanarTelemedicine.session.token}`);
+                const CHAT_URL = `${SanarTelemedicine.session.chatUrl}/${notification.roomName}/${notification.uid}?token=${SanarTelemedicine.session.token}`;
+                setBaseUrl(CHAT_URL);
             }
         }
     })
@@ -29,41 +29,39 @@ const SanarChat = (props: ITelemedicine) => {
             props.onEndFlow();
         }
     }
-    
+
     if (!props.enable) {
         return (null);
     }
     return (
-        <Container>
-            <View style={styles.container}>
-                <WebView
-                    source={{
-                        uri: baseUrl,
-                    }}
-                    style={styles.container}
-                    // incognito
-                    onMessage={(event) => onMessage(event.nativeEvent)}
-                    injectedJavaScript={`
-                        (function() {
-                            function wrap(fn) {
-                            return function wrapper() {
-                                var res = fn.apply(this, arguments);
-                                window.ReactNativeWebView.postMessage(window.location.href);
-                                return res;
-                            }
-                            }
-                            history.pushState = wrap(history.pushState);
-                            history.replaceState = wrap(history.replaceState);
-                            history.go = wrap(history.go);
-                            window.addEventListener('popstate', function() {
-                                window.ReactNativeWebView.postMessage('navigationStateChange');
-                            });
-                        })();
-                        true;
-                    `}
-                />
-            </View>
-        </Container>
+        <View style={styles.container}>
+            <WebView
+                source={{
+                    uri: baseUrl,
+                }}
+                style={{ flex: 1 }}
+                // incognito
+                onMessage={(event) => onMessage(event.nativeEvent)}
+                injectedJavaScript={`
+                    (function() {
+                        function wrap(fn) {
+                        return function wrapper() {
+                            var res = fn.apply(this, arguments);
+                            window.ReactNativeWebView.postMessage(window.location.href);
+                            return res;
+                        }
+                        }
+                        history.pushState = wrap(history.pushState);
+                        history.replaceState = wrap(history.replaceState);
+                        history.go = wrap(history.go);
+                        window.addEventListener('popstate', function() {
+                            window.ReactNativeWebView.postMessage('navigationStateChange');
+                        });
+                    })();
+                    true;
+                `}
+            />
+        </View>
     );
 }
 
@@ -71,9 +69,8 @@ export default SanarChat;
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-        width: '100%',
-        zIndex: 8
-        // flex: 1
+        flex: 1,
+        height: height,
+        width: width,
     }
 });
